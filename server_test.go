@@ -15,3 +15,26 @@ func TestAccountCreationInsertsTransaction(t *testing.T) {
     t.Error("expected 1")
   }
 }
+
+func TestTransactionsAffectBothParties(t *testing.T) {
+  testAccountOne := createAccount(5, "holy", "diver")
+  testAccountTwo := createAccount(7, "unholy", "climber")
+
+  if testAccountOne.balance() != 100 {
+    t.Error("expected testAccountOne's balance to be 100")
+  }
+
+  if testAccountTwo.balance() != 100 {
+    t.Error("expected testAccountTwo's balance to be 100")
+  }
+
+  testAccountOne.debit(testAccountTwo, 50)
+
+  if testAccountOne.balance() != 50 {
+    t.Error("expected testAccountOne's balance to be 50")
+  }
+
+  if testAccountTwo.balance() != 150 {
+    t.Error("expected testAccountTwo's balance to be 150")
+  }
+}

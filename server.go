@@ -30,7 +30,7 @@ func createAccount(id int, name string, password string) Account {
 }
 
 func (account Account) debit(receiving Account, amount int) {
-  Transactions = append(Transactions, Transaction{1, time.Now(), receiving.id, account.id, amount})
+  Transactions = append(Transactions, Transaction{1, time.Now(), account.id, receiving.id, amount})
 }
 
 func (account Account) balance() int {
@@ -48,14 +48,6 @@ func (account Account) balance() int {
 func main() {
   masterAccount := Account{1, "Master Account", "letmein"}
   Accounts = append(Accounts, masterAccount)
-
-  testAccountOne := createAccount(5, "holy", "diver")
-  testAccountTwo := createAccount(7, "unholy", "climber")
-  testAccountOne.debit(testAccountTwo, 50)
-
-  fmt.Printf("one: %v\n", testAccountOne.balance())
-  fmt.Printf("two: %v\n", testAccountTwo.balance())
-  fmt.Printf("master: %v\n", masterAccount.balance())
 
   fmt.Println(Transactions)
   fmt.Println(Accounts)
