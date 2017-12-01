@@ -50,6 +50,13 @@ func (account Account) balance() int {
   return balance
 }
 
+func prepareIndexPage(w http.ResponseWriter, data map[string]string) {
+  filepath := "site/index.html"
+  fmt.Println(filepath)
+  t, _ := template.ParseFiles(filepath)
+  t.Execute(w, data)
+}
+
 func main() {
   masterAccount := Account{1, "Master Account", "letmein"}
   Accounts = append(Accounts, masterAccount)
@@ -62,11 +69,7 @@ func main() {
   }
 
   http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-    // filepath := "site/"+r.URL.Path[1:]
-    filepath := "site/index.html"
-    fmt.Println(filepath)
-    t, _ := template.ParseFiles(filepath)
-    t.Execute(w, data)
+    prepareIndexPage(w, data)
   })
 
   http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
@@ -87,6 +90,8 @@ func main() {
           }
         }
       }
+
+      prepareIndexPage(w, data)
     }
   })
 
