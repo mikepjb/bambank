@@ -64,9 +64,7 @@ func main() {
   // if no session string
   createAccount(47, "testuser", "testcity")
 
-  data := map[string]string{
-    "balance": "1000",
-  }
+  data := map[string]string{}
 
   http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
     prepareIndexPage(w, data)
@@ -87,6 +85,7 @@ func main() {
             fmt.Printf("found match for password %s\n", account.password)
             data["username"] = account.name
             data["loggedIn"] = "yes"
+            data["balance"] = "1000"
           }
         }
       }
@@ -95,11 +94,11 @@ func main() {
     }
   })
 
-  http.HandleFunc("/create", func(w http.ResponseWriter, r *http.Request) {
+  http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
     if r.Method == "POST" {
-      // create a user
+      data = map[string]string{}
+      prepareIndexPage(w, data)
     }
-    // redirect to the homepage
   })
 
   port := os.Getenv("PORT")

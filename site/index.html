@@ -2,19 +2,26 @@
 
 Sign up today and get 100 Euros free.
 
-<p>
-<form action="/login" method="post">
-  username: <input type="text" name="username" value="username">
-  <br>
-  password: <input type="password" name="password">
-  <br><br>
-  <input type="submit" value="Login">
-</form> 
-
 {{if .loggedIn -}}
 <p>you are logged in as {{ .username }}</p>
 
 <p>
 {{ .balance }}
 </p>
+
+<form action="/logout" method="post">
+  <input type="submit" value="Logout">
+</form>
+
+{{- else}}
+
+<p>
+<form action="/login" method="post">
+  username: <input type="text" name="username">
+  <br>
+  password: <input type="password" name="password">
+  <br><br>
+  <input type="submit" value="Login">
+</form>
+
 {{- end}}
