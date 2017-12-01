@@ -1,13 +1,23 @@
 <h1>Welcome to Bambank!</h1>
 
-Sign up today and get 100 Euros free.
+Sign up today and get €100 free.
 
 {{if .loggedIn -}}
 <p>you are logged in as {{ .username }}</p>
 
 <p>
-{{ .balance }}
+Remaining balance: €{{ .balance }}
 </p>
+
+Send money to another user:
+<form action="/debit" method="post">
+  <input type=hidden name="creditor" value="{{ .username }}">
+  username: <input type="text" name="username">
+  <br>
+  amount: <input type="text" name="amount">
+  <br><br>
+  <input type="submit" value="Send">
+</form>
 
 <form action="/logout" method="post">
   <input type="submit" value="Logout">
