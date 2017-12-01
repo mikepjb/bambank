@@ -3,12 +3,17 @@ package main
 import (
   "fmt"
   "time"
+  "net/http"
+  "os"
+  "log"
+  "html/template"
+  "strings"
 )
 
 type Account struct {
   id int
   name string
-  password_encrypted string
+  password string
 }
 
 type Transaction struct {
@@ -49,6 +54,55 @@ func main() {
   masterAccount := Account{1, "Master Account", "letmein"}
   Accounts = append(Accounts, masterAccount)
 
-  fmt.Println(Transactions)
-  fmt.Println(Accounts)
+  // if no session string
+  createAccount(47, "testuser", "testcity")
+
+  data := map[string]string{
+    "balance": "1000",
+  }
+
+  http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+    // filepath := "site/"+r.URL.Path[1:]
+    filepath := "site/index.html"
+    fmt.Println(filepath)
+    t, _ := template.ParseFiles(filepath)
+    t.Execute(w, data)
+  })
+
+  http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+    if r.Method == "POST" {
+      r.ParseForm()
+      for k, v := range r.Form {
+        fmt.Println("key:", k)
+        fmt.Println("val:", strings.Join(v, ""))
+      }
+
+      for _, account := range Accounts {
+        if r.FormValue("username") == account.name {
+          fmt.Printf("found match for username %s\n", account.name)
+          if r.FormValue("password") == account.password {
+            fmt.Printf("found match for password %s\n", account.password)
+            data["username"] = account.name
+            data["loggedIn"] = "yes"
+          }
+        }
+      }
+    }
+  })
+
+  http.HandleFunc("/create", func(w http.ResponseWriter, r *http.Request) {
+    if r.Method == "POST" {
+      // create a user
+    }
+    // redirect to the homepage
+  })
+
+  port := os.Getenv("PORT")
+
+  if port == "" {
+    port = "8080"
+  }
+
+  fmt.Printf("Starting serving on port %s\n", port)
+  log.Fatal(http.ListenAndServe(":"+port, nil))
 }
